@@ -26,7 +26,6 @@ def isCorrect(num,base:int):
             right.append(l)
     right = set(right)
     for n in str(num):
-        print(n)
         if str(n) not in right:
             return False
     return True
@@ -97,23 +96,23 @@ class Main(Frame):
         if operation == "*":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","  " + operation)
+            self.sign.insert("1.0",operation)
         if operation == "/":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","   " + operation)
+            self.sign.insert("1.0",operation)
         if operation == "^":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","  " + operation)
+            self.sign.insert("1.0",operation)
         if operation == "+":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","  " + operation)
+            self.sign.insert("1.0",operation)
         if operation =="-":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","   " + operation)
+            self.sign.insert("1.0",operation)
     def clearSign(self):
         self.sign.delete("1.0",END)
 
@@ -124,10 +123,32 @@ class Main(Frame):
         first_base_act = self.cmb_1.get()
         second_num_act = self.second_num.get("1.0","end")
         second_base_act = self.cmb_2.get()
-        print(first_num_act,first_base_act)
-        if (isCorrect(first_num_act,int(first_base_act[1:])) == False) or (isCorrect(second_num_act,int(second_base_act[1:])) == False):
+        first_num_act = first_num_act.replace("\n", "")
+        second_num_act = second_num_act.replace("\n", "")
+        if (isCorrect(first_num_act,int(first_base_act)) == False) or (isCorrect(second_num_act,int(second_base_act)) == False):
             self.num_error()
-
+        first_num_act = convertFromAnyToDecimal(first_num_act,first_base_act)
+        second_num_act = convertFromAnyToDecimal(second_num_act,second_base_act)
+        first_num_act = int(first_num_act)
+        second_num_act = int(second_num_act)
+        first_base_act = int(first_base_act)
+        second_base_act = int(second_base_act)
+        result = 0
+        sign = self.sign.get("1.0","end")
+        sign = sign.replace("\n","")
+        print(sign)
+        if sign == '+':
+            result = first_num_act + second_num_act
+        if sign == '-':
+            result = first_num_act - second_num_act
+        if sign == '*':
+            result = first_num_act * second_num_act
+        if sign == '/':
+            result = first_num_act / second_num_act
+        if sign == '^':
+            result = pow(first_num_act,second_num_act)
+        print(result)
+        return result
 
 if __name__ == '__main__':
     root = Tk()
