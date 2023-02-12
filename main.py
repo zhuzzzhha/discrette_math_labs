@@ -3,8 +3,8 @@ from tkinter.ttk import Combobox
 from tkinter.messagebox import showerror, showwarning, showinfo
 
 def convertFromDecimalToAny(num, base, upper=False):
-    digits = '0123456789abcdefghijklmnopqrstuvwxyz'
-    if base > len(digits): return None
+    digits = '0123456789ABCDEF'
+    if base > len(digits): return "Введено неверное основание системы"
     result = ''
     number = int(num)
     while number > 0:
@@ -26,7 +26,6 @@ def isCorrect(num,base:int):
             right.append(l)
     right = set(right)
     for n in str(num):
-        print(n)
         if str(n) not in right:
             return False
     return True
@@ -37,6 +36,7 @@ class Main(Frame):
         super(Main, self).__init__(root)
         self.build()
 
+    res = 0
     def build(self):
         self.first_num = Text(root,state = 'normal',font = ("Times New Roman", 24))
         self.first_num.place(x =5, y = 25,width=240,height = 90)
@@ -60,9 +60,8 @@ class Main(Frame):
         self.cmb_2.place(x=660, y=75,width=60,height = 40)
 
         self.eq = Button(root,text="=",
-                   font=("Times New Roman", 32),bg ='#FFF',command = lambda: self.action()).place(x=725, y=45,
-                                      width=80,
-                                      height=50)
+                   font=("Times New Roman", 32),bg ='#FFF',command = lambda: self.action())\
+                                      .place(x=725, y=45,width=80,height=50)
 
         self.result = Text(root, state='disabled', font=("Times New Roman", 24))
         self.result.place(x=815, y=25, width=240, height=90)
@@ -72,10 +71,7 @@ class Main(Frame):
         self.cmb_3.current(10)
         self.cmb_3.place(x=1060, y=75, width=60, height=40)
 
-        btns = [
-            "C", "DEL", "*","/","+","-","^"
-
-    ]
+        btns = ["C", "DEL", "*","/","+","-","^"]
 
         x = 20
         y = 140
@@ -97,52 +93,70 @@ class Main(Frame):
         if operation == "*":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","  " + operation)
+            self.sign.insert("1.0",operation)
         if operation == "/":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","   " + operation)
+            self.sign.insert("1.0",operation)
         if operation == "^":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","  " + operation)
+            self.sign.insert("1.0",operation)
         if operation == "+":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","  " + operation)
+            self.sign.insert("1.0",operation)
         if operation =="-":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
-            self.sign.insert("1.0","   " + operation)
+            self.sign.insert("1.0",operation)
     def clearSign(self):
         self.sign.delete("1.0",END)
 
     def num_error(self):
         showerror(title="Ошибка", message="Введены недопустимые символы в поле ввода числа!")
+
     def action(self):
         first_num_act = self.first_num.get("1.0","end")
         first_base_act = self.cmb_1.get()
         second_num_act = self.second_num.get("1.0","end")
         second_base_act = self.cmb_2.get()
-        print(first_num_act,first_base_act)
-        if (isCorrect(first_num_act,int(first_base_act[1:])) == False) or (isCorrect(second_num_act,int(second_base_act[1:])) == False):
+        third_base_act = self.cmb_3.get()
+        first_num_act = first_num_act.replace("\n", "")
+        second_num_act = second_num_act.replace("\n", "")
+        if (isCorrect(first_num_act,int(first_base_act)) == False) or (isCorrect(second_num_act,int(second_base_act)) == False):
             self.num_error()
-    def ans(self):
-        first_num = self.first_num.get("1.0","end")
-        first_base = self.cmb_1.get()
-        second_num = self.second_num.get("1.0", "end")
-        second_base = self.cmb_2.get()
-        if(first_base != "10"):
-            first_num = convertFromAnyToDecimal(first_num,first_base)
-        if(second_base != "10"):
-            second_num = convertFromAnyToDecimal(second_num, second_base)
+        first_num_act = convertFromAnyToDecimal(first_num_act,first_base_act)
+        second_num_act = convertFromAnyToDecimal(second_num_act,second_base_act)
+        first_num_act = int(first_num_act)
+        second_num_act = int(second_num_act)
+        first_base_act = int(first_base_act)
+        second_base_act = int(second_base_act)
 
+        sign = self.sign.get("1.0","end")
+        sign = sign.replace("\n","")
 
+        if sign == '+':
+            res = first_num_act + second_num_act
+        if sign == '-':
+            res = first_num_act - second_num_act
+        if sign == '*':
+            res = first_num_act * second_num_act
+        if sign == '/':
+            res = first_num_act / second_num_act
+        if sign == '^':
+            res = pow(first_num_act,second_num_act)
 
+        third_base_act = int(third_base_act)
+        res = convertFromDecimalToAny(res, third_base_act)
 
+        self.result.config(state=NORMAL)
+        if (self.result.get != ""):
+            self.result.delete("1.0","end")
+        self.result.insert("1.0", res)
+        self.result.config(state=DISABLED)
 
-
-
+        return res
 
 if __name__ == '__main__':
     root = Tk()
