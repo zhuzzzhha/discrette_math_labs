@@ -36,6 +36,7 @@ class Main(Frame):
         super(Main, self).__init__(root)
         self.build()
 
+    res = 0
     def build(self):
         self.first_num = Text(root,state = 'normal',font = ("Times New Roman", 24))
         self.first_num.place(x =5, y = 25,width=240,height = 90)
@@ -59,9 +60,8 @@ class Main(Frame):
         self.cmb_2.place(x=660, y=75,width=60,height = 40)
 
         self.eq = Button(root,text="=",
-                   font=("Times New Roman", 32),bg ='#FFF',command = lambda: self.action()).place(x=725, y=45,
-                                      width=80,
-                                      height=50)
+                   font=("Times New Roman", 32),bg ='#FFF',command = lambda: self.action())\
+                                      .place(x=725, y=45,width=80,height=50)
 
         self.result = Text(root, state='disabled', font=("Times New Roman", 24))
         self.result.place(x=815, y=25, width=240, height=90)
@@ -71,12 +71,9 @@ class Main(Frame):
         self.cmb_3.current(10)
         self.cmb_3.place(x=1060, y=75, width=60, height=40)
 
-        btns = [
-            "C", "DEL", "*","/","+","-","^"
+        btns = ["C","*","/","+","-","^"]
 
-    ]
-
-        x = 20
+        x = 60
         y = 140
         for bt in btns:
             com = lambda x=bt: self.logicalc(x)
@@ -91,8 +88,7 @@ class Main(Frame):
         if operation == 'C':
             self.first_num.delete("1.0", "end")
             self.second_num.delete("1.0","end")
-        if operation == 'DEL':
-            self.clearSign()
+            self.result.delete("1.0","end")
         if operation == "*":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
@@ -117,12 +113,14 @@ class Main(Frame):
         self.sign.delete("1.0",END)
 
     def num_error(self):
-        showerror(title="Ошибка", message="Введены недопустимые символы в поле ввода числа!")
+        showwarning(title="Ошибка", message="Введены недопустимые символы в поле ввода числа!")
+
     def action(self):
         first_num_act = self.first_num.get("1.0","end")
         first_base_act = self.cmb_1.get()
         second_num_act = self.second_num.get("1.0","end")
         second_base_act = self.cmb_2.get()
+        third_base_act = self.cmb_3.get()
         first_num_act = first_num_act.replace("\n", "")
         second_num_act = second_num_act.replace("\n", "")
         if (isCorrect(first_num_act,int(first_base_act)) == False) or (isCorrect(second_num_act,int(second_base_act)) == False):
@@ -133,22 +131,31 @@ class Main(Frame):
         second_num_act = int(second_num_act)
         first_base_act = int(first_base_act)
         second_base_act = int(second_base_act)
-        result = 0
+
         sign = self.sign.get("1.0","end")
         sign = sign.replace("\n","")
-        print(sign)
+
         if sign == '+':
-            result = first_num_act + second_num_act
+            res = first_num_act + second_num_act
         if sign == '-':
-            result = first_num_act - second_num_act
+            res = first_num_act - second_num_act
         if sign == '*':
-            result = first_num_act * second_num_act
+            res = first_num_act * second_num_act
         if sign == '/':
-            result = first_num_act / second_num_act
+            res = first_num_act / second_num_act
         if sign == '^':
-            result = pow(first_num_act,second_num_act)
-        print(result)
-        return result
+            res = pow(first_num_act,second_num_act)
+
+        third_base_act = int(third_base_act)
+        res = convertFromDecimalToAny(res, third_base_act)
+
+        self.result.config(state=NORMAL)
+        if (self.result.get != ""):
+            self.result.delete("1.0","end")
+        self.result.insert("1.0", res)
+        self.result.config(state=DISABLED)
+
+        return res
 
 if __name__ == '__main__':
     root = Tk()
