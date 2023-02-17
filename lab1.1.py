@@ -13,6 +13,7 @@ def convertFromFloatToDecimal(num:str,base):
   for r in num[1]:
     res+=int(r)*pow(int(base),i)
     i-=1
+  res = round(res,3)
   return res
 
 def convertFromDecimalToAny(num, bas, upper=False):
@@ -32,7 +33,8 @@ def convertFromAnyToDecimal(num, bas):
     return str(int(number, base))
 
 def isCorrect(num,base:int):
-    letters = list(map(str,['A','B','C','D','E','F','.']))
+    letters = list(map(str,['A','B','C','D','E','F']))
+    num = str(num).replace('.','')
     right = [str(i) for i in range(0,base)]
     if(base>10):
         for l in letters[0:base-10]:
