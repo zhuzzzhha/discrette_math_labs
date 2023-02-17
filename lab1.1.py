@@ -3,6 +3,7 @@ from tkinter.ttk import Combobox
 from tkinter.messagebox import showerror, showwarning, showinfo
 
 def convertFromFloatToDecimal(num:str,base):
+  num=str(num)
   num = list(num.split('.'))
   res = 0
   i = len(num[0]) - 1
@@ -13,12 +14,12 @@ def convertFromFloatToDecimal(num:str,base):
     res+=int(r)*pow(int(base),i)
     i-=1
   return res
-def convertFromDecimalFloatToAny(num:str, base):
 
-def convertFromDecimalToAny(num, base, upper=False):
+def convertFromDecimalToAny(num, bas, upper=False):
     digits = '0123456789ABCDEF'
     result = ''
     number = int(num)
+    base = int(bas)
     while number > 0:
         result = digits[number % base] + result
         number //= base
@@ -143,12 +144,10 @@ class Main(Frame):
           first_num_act = convertFromAnyToDecimal(first_num_act,first_base_act)
           first_num_act = int(first_num_act)
         if second_num_act.find('.') != -1:
-          second_num_act = convertFromFloatToDecimal((second_num_act,second_base_act))
-          second_num_act = int(second_num_act)
+          second_num_act = convertFromFloatToDecimal(second_num_act,second_base_act)
         else:
           second_num_act = convertFromAnyToDecimal(second_num_act,second_base_act)
-        first_base_act = int(first_base_act)
-        second_base_act = int(second_base_act)
+          second_num_act = int(second_num_act)
 
         sign = self.sign.get("1.0","end")
         sign = sign.replace("\n","")
@@ -168,13 +167,14 @@ class Main(Frame):
         if res.find('.') != -1:
           res = convertFromFloatToDecimal(res,third_base_act)
         else:
-          res = convertFromDecimalToAny(res, third_base_act)
+          res += 0.0
 
         self.result.config(state=NORMAL)
         if (self.result.get != ""):
             self.result.delete("1.0","end")
         self.result.insert("1.0", res)
         self.result.config(state=DISABLED)
+        res=round(res,3)
 
         return res
 
