@@ -16,6 +16,20 @@ def convertFromFloatToDecimal(num:str,base):
   res = round(res,3)
   return res
 
+def convertFromDecimalToFloat(num,base):
+    alpha = "0123456789ABCDEF"
+    res_int, res_frac = map(str, str(num).split('.'))
+    res_int = convertFromDecimalToAny(res_int, base)
+    b = 0
+    k = 10
+    for i in res_frac:
+        b += alpha.index(i) / k
+        k *= 10
+    b = str(toBaseFrac(b, int(base))).rstrip('0')
+    b = b[:3]
+    res = res_int + '.' + b
+    return res
+
 def convertFromDecimalToAny(num, bas, upper=False):
     digits = '0123456789ABCDEF'
     result = ''
@@ -167,9 +181,9 @@ class Main(Frame):
 
         third_base_act = int(third_base_act)
         if str(res).find('.') != -1:
-          res = convertFromFloatToDecimal(res,third_base_act)
+          res = convertFromDecimalToFloat(res,third_base_act)
         else:
-          res += 0.0
+          res = convertFromDecimalToAny(res,third_base_act)+".0"
 
         self.result.config(state=NORMAL)
         if (self.result.get != ""):
