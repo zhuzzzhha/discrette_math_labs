@@ -39,6 +39,7 @@ def convertFromDecimalToFloat(num,base):
     b = str(toBaseFrac(b, int(base))).rstrip('0')
     b = b[:3]
     if (res_int==""): res_int="0"
+    if (b == ""): b = "0"
     res = res_int + '.' + b
     return res
 
