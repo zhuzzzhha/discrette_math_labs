@@ -16,6 +16,17 @@ def convertFromFloatToDecimal(num:str,base):
   res = round(res,3)
   return res
 
+def toBaseFrac(frac, base, n = 10) :
+    alpha = "0123456789ABCDEF"
+    b = ''
+    while n :
+        frac *= base
+        frac = round(frac,n)
+        b += str(int(frac))
+        frac -= int(frac)
+        n -= 1
+    return b
+
 def convertFromDecimalToFloat(num,base):
     alpha = "0123456789ABCDEF"
     res_int, res_frac = map(str, str(num).split('.'))
@@ -27,6 +38,7 @@ def convertFromDecimalToFloat(num,base):
         k *= 10
     b = str(toBaseFrac(b, int(base))).rstrip('0')
     b = b[:3]
+    if (res_int==""): res_int="0"
     res = res_int + '.' + b
     return res
 
@@ -190,7 +202,6 @@ class Main(Frame):
             self.result.delete("1.0","end")
         self.result.insert("1.0", res)
         self.result.config(state=DISABLED)
-        res=round(res,3)
 
         return res
 
