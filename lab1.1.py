@@ -164,7 +164,7 @@ class Main(Frame):
             res = pow(first_num_act,second_num_act)
 
         third_base_act = int(third_base_act)
-        if res.find('.') != -1:
+        if str(res).find('.') != -1:
           res = convertFromFloatToDecimal(res,third_base_act)
         else:
           res += 0.0
