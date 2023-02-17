@@ -2,9 +2,21 @@ from tkinter import *
 from tkinter.ttk import Combobox
 from tkinter.messagebox import showerror, showwarning, showinfo
 
+def convertFromFloatToDecimal(num:str,base):
+  num = list(num.split('.'))
+  res = 0
+  i = len(num[0]) - 1
+  for r in num[0]:
+    res+=int(r)*pow(int(base),i)
+    i-=1
+  for r in num[1]:
+    res+=int(r)*pow(int(base),i)
+    i-=1
+  return res
+def convertFromDecimalFloatToAny(num:str, base):
+
 def convertFromDecimalToAny(num, base, upper=False):
     digits = '0123456789ABCDEF'
-    if base > len(digits): return "Введено неверное основание системы"
     result = ''
     number = int(num)
     while number > 0:
@@ -19,7 +31,7 @@ def convertFromAnyToDecimal(num, bas):
     return str(int(number, base))
 
 def isCorrect(num,base:int):
-    letters = list(map(str,['A','B','C','D','E','F']))
+    letters = list(map(str,['A','B','C','D','E','F','.']))
     right = [str(i) for i in range(0,base)]
     if(base>10):
         for l in letters[0:base-10]:
@@ -125,10 +137,16 @@ class Main(Frame):
         second_num_act = second_num_act.replace("\n", "")
         if (isCorrect(first_num_act,int(first_base_act)) == False) or (isCorrect(second_num_act,int(second_base_act)) == False):
             self.num_error()
-        first_num_act = convertFromAnyToDecimal(first_num_act,first_base_act)
-        second_num_act = convertFromAnyToDecimal(second_num_act,second_base_act)
-        first_num_act = int(first_num_act)
-        second_num_act = int(second_num_act)
+        if first_num_act.find('.') != -1:
+          first_num_act = convertFromFloatToDecimal(first_num_act,first_base_act)
+        else:
+          first_num_act = convertFromAnyToDecimal(first_num_act,first_base_act)
+          first_num_act = int(first_num_act)
+        if second_num_act.find('.') != -1:
+          second_num_act = convertFromFloatToDecimal((second_num_act,second_base_act))
+          second_num_act = int(second_num_act)
+        else:
+          second_num_act = convertFromAnyToDecimal(second_num_act,second_base_act)
         first_base_act = int(first_base_act)
         second_base_act = int(second_base_act)
 
@@ -147,7 +165,10 @@ class Main(Frame):
             res = pow(first_num_act,second_num_act)
 
         third_base_act = int(third_base_act)
-        res = convertFromDecimalToAny(res, third_base_act)
+        if res.find('.') != -1:
+          res = convertFromFloatToDecimal(res,third_base_act)
+        else:
+          res = convertFromDecimalToAny(res, third_base_act)
 
         self.result.config(state=NORMAL)
         if (self.result.get != ""):
