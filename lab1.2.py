@@ -48,43 +48,64 @@ class Main(Frame):
 
     res = 0
     def build(self):
-        min_count_0 = 4
-        self.first_num = Text(root,state = 'normal',font = ("Times New Roman", 24))
-        self.first_num.place(x =5, y = 25,width=240,height = 90)
+        self.num1 = ["0"]*4
+        self.num2 = ["0"]*4
+        i=0
+        btns = ["м", "дм", "см", "мм"]
+        x=5; y=25
+        for bt in btns:
+            print(self.num1[i])
+            self.num1[i]=Text(root, state = 'normal',
+                   font=("Times New Roman", 24))
+            self.num1[i].place(x=x, y=y,width=150,height=90)
+            x += 200; i+=1
 
-        self.cmb_1 = Combobox(root,font = ("Times New Roman",18),state="readonly")
-        self.cmb_1['values'] = ("м","дм","см","мм")
-        self.cmb_1.current(2)
-        self.cmb_1.place(x = 250, y = 75,width=60,height = 40)
+        x = 160;y = 75
+        for bt in btns:
+            com = lambda x=bt: self.logicalc(x)
+            Label(root, text = bt,
+                 font=("Times New Roman", 18)).place(x=x, y=y, width=40, height=40)
+            x += 200
+
+        x = 5;
+        y = 225
+        i=0
+        for bt in btns:
+            com = lambda x=bt: self.logicalc(x)
+            self.num2[i]=Text(root, state='normal',
+                 font=("Times New Roman", 24))
+            self.num2[i].place(x=x, y=y, width=150, height=90)
+            x += 200; i+=1
+
+
+        x = 160;
+        y = 275
+        for bt in btns:
+            com = lambda x=bt: self.logicalc(x)
+            Label(root, text=bt,
+                  font=("Times New Roman", 18)).place(x=x, y=y, width=40, height=40)
+            x += 200
 
         self.sign = Text(root, font=("Times New Roman", 32))
-        self.sign.place(x=320, y=45, width=75, height=50)
+        self.sign.place(x=340, y=145, width=75, height=50)
         self.sign.tag_add("center", "1.0", "end")
-
-        self.second_num = Text(root, state='normal', font=("Times New Roman", 24))
-        self.second_num.place(x=415, y=25, width=240, height=90)
 
         self.eq = Button(root,text="=",
                    font=("Times New Roman", 32),bg ='#FFF',command = lambda: self.action())\
-                                      .place(x=725, y=45,width=80,height=50)
+                                      .place(x=825, y=145,width=80,height=50)
 
         self.result = Text(root, state='disabled', font=("Times New Roman", 24))
-        self.result.place(x=815, y=25, width=240, height=90)
-
-        self.cmb_2 = Combobox(root, font=("Times New Roman", 18), state="readonly")
-        self.cmb_2['values'] = ("м","дм","см","мм")
-        self.cmb_2.current(2)
-        self.cmb_2.place(x=660, y=75, width=60, height=40)
+        self.result.place(x=940, y=125, width=200, height=90)
 
         self.cmb_3 = Combobox(root, font=("Times New Roman", 18),state="readonly")
         self.cmb_3['values'] = ("м","дм","см","мм")
         self.cmb_3.current(2)
-        self.cmb_3.place(x=1060, y=75, width=60, height=40)
+        self.cmb_3.place(x=1160, y=175, width=60, height=40)
 
-        btns = ["C", "DEL", "*", "/", "+", "-", "^"]
+        btns = ["C", "DEL","+", "-"]
 
         x = 20
-        y = 140
+        y = 340
         for bt in btns:
             com = lambda x=bt: self.logicalc(x)
             Button(text=bt, bg="#FFF",
@@ -100,18 +121,6 @@ class Main(Frame):
             self.second_num.delete("1.0","end")
         if operation == 'DEL':
             self.clearSign()
-        if operation == "*":
-            if self.sign.get !='':
-                self.sign.delete("1.0","end")
-            self.sign.insert("1.0",operation)
-        if operation == "/":
-            if self.sign.get !='':
-                self.sign.delete("1.0","end")
-            self.sign.insert("1.0",operation)
-        if operation == "^":
-            if self.sign.get !='':
-                self.sign.delete("1.0","end")
-            self.sign.insert("1.0",operation)
         if operation == "+":
             if self.sign.get !='':
                 self.sign.delete("1.0","end")
@@ -125,43 +134,31 @@ class Main(Frame):
         showerror(title="Ошибка", message="Введены недопустимые символы в поле ввода числа!")
 
     def action(self):
-        first_num_act = self.first_num.get("1.0","end")
-        second_num_act = self.second_num.get("1.0", "end")
-        first_dim = self.cmb_1.get()
-        second_dim = self.cmb_2.get()
-        third_dim = self.cmb_3.get()
+        kf=1000
+        res1=0
+        for i in range(0,4):
+            temp=self.num1[i].get("1.0","end")
+            if(temp!="\n"):
+                res1+=int(temp)*kf
+            kf/=10
 
-        first_num_act = first_num_act.replace("\n", "")
-        second_num_act = second_num_act.replace("\n", "")
-        first_dim = first_dim.replace("\n", "")
-        second_dim = second_dim.replace("\n", "")
-        third_dim = third_dim.replace("\n", "")
-
-        #if (first_num_act not in {0,1,2,3,4,5,6,7,8,9} or second_num_act not in {0,1,2,3,4,5,6,7,8,9}):
-        #   self.num_error()
-
-        first_num_act1 = int(convertFromAnyToMM(first_num_act,first_dim))
-        second_num_act1 = int(convertFromAnyToMM(second_num_act, second_dim))
-        first_num_act = int(first_num_act)
-        second_num_act = int(second_num_act)
-
-        print(first_num_act, ' ',second_num_act,first_dim,second_dim)
+        res2=0
+        kf=1000
+        for i in range(0,4):
+            temp=self.num2[i].get("1.0","end")
+            if(temp!="\n"):
+                res2+=int(temp)*kf
+            kf/=10
 
         sign = self.sign.get("1.0", "end")
         sign = sign.replace("\n", "")
         if sign == '+':
-            res = first_num_act1 + second_num_act1
+            res = res1 + res2
         if sign == '-':
-            res = first_num_act1 - second_num_act1
-        if sign == '*':
-            res = first_num_act1 * second_num_act1
-        if sign == '/':
-            res = (first_num_act1) / second_num_act1
+            res = res1 - res2
 
-        if sign == '^':
-            res = pow(first_num_act1, second_num_act1)
-
-        res = convertFromMMToAny(res,third_dim)
+        base=self.cmb_3.get()
+        res=convertFromMMToAny(res,base)
 
         self.result.config(state=NORMAL)
         if (self.result.get != ""):
@@ -174,7 +171,7 @@ class Main(Frame):
 if __name__ == '__main__':
     root = Tk()
     root["bg"] = "#6A5ACD"
-    root.geometry("1125x250+80+200")
+    root.geometry("1300x500+0+100")
     root.title("Калькулятор")
     root.resizable(True, True)
     app = Main(root)
