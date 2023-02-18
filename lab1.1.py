@@ -29,6 +29,10 @@ def toBaseFrac(frac, base, n = 10) :
 
 def convertFromDecimalToFloat(num,base):
     alpha = "0123456789ABCDEF"
+    m = False
+    if str(num).find('-') != -1:
+        m = True
+        num = str(num).replace('-','')
     res_int, res_frac = map(str, str(num).split('.'))
     res_int = convertFromDecimalToAny(res_int, base)
     b = 0
@@ -40,10 +44,17 @@ def convertFromDecimalToFloat(num,base):
     b = b[:3]
     if (res_int==""): res_int="0"
     if (b == ""): b = "0"
-    res = res_int + '.' + b
+    if m:
+        res = '-' + res_int + '.' + b
+    else:
+        res = res_int + '.' + b
     return res
 
 def convertFromDecimalToAny(num, bas, upper=False):
+    m = False
+    if str(num).find('-') != -1:
+        m = True
+        num = str(num).replace('-','')
     digits = '0123456789ABCDEF'
     result = ''
     number = int(num)
@@ -51,7 +62,15 @@ def convertFromDecimalToAny(num, bas, upper=False):
     while number > 0:
         result = digits[number % base] + result
         number //= base
-    return str(result.upper()) if upper else result
+
+    if upper:
+        res = str(result.upper())
+    else:
+        res = result
+    if m:
+        res = '-' + res
+    return res
+
 
 
 def convertFromAnyToDecimal(num, bas):
@@ -185,6 +204,7 @@ class Main(Frame):
             res = first_num_act + second_num_act
         if sign == '-':
             res = first_num_act - second_num_act
+            print(res)
         if sign == '*':
             res = first_num_act * second_num_act
         if sign == '/':
@@ -196,7 +216,7 @@ class Main(Frame):
         if str(res).find('.') != -1:
           res = convertFromDecimalToFloat(res,third_base_act)
         else:
-          res = convertFromDecimalToAny(res,third_base_act)+".0"
+          res = convertFromDecimalToAny(res,third_base_act)
 
         self.result.config(state=NORMAL)
         if (self.result.get != ""):
