@@ -28,15 +28,12 @@ def convertFromAnyToMM(num, bas):
         number*=1000
     return str(number)
 
-def isCorrect(num,base:int):
-    letters = list(map(str,['A','B','C','D','E','F']))
-    right = [str(i) for i in range(0,base)]
-    if(base>10):
-        for l in letters[0:base-10]:
-            right.append(l)
-    right = set(right)
-    for n in str(num):
-        if str(n) not in right:
+def isCorrect(num):
+    digits = set(['0','1','2','3','4','5','6','7','8','9'])
+    for n in list(str(num)):
+        if n not in digits:
+            print(type(n))
+            print(n)
             return False
     return True
 
@@ -131,13 +128,16 @@ class Main(Frame):
             self.sign.insert("1.0",operation)
 
     def num_error(self):
-        showerror(title="Ошибка", message="Введены недопустимые символы в поле ввода числа!")
+        showwarning(title="Ошибка", message="Введены недопустимые символы в поле ввода числа!")
 
     def action(self):
         kf=1000
         res1=0
         for i in range(0,4):
             temp=self.num1[i].get("1.0","end")
+            temp = temp.replace('\n','')
+            if not isCorrect(temp):
+                self.num_error()
             if(temp!="\n"):
                 res1+=int(temp)*kf
             kf/=10
@@ -146,6 +146,9 @@ class Main(Frame):
         kf=1000
         for i in range(0,4):
             temp=self.num2[i].get("1.0","end")
+            temp = temp.replace('\n', '')
+            if not isCorrect(temp):
+                self.num_error()
             if(temp!="\n"):
                 res2+=int(temp)*kf
             kf/=10
@@ -177,6 +180,3 @@ if __name__ == '__main__':
     app = Main(root)
     app.pack()
     root.mainloop()
-
-
-
